@@ -1,6 +1,7 @@
 # Garmin Running MCP Server
 
-MCP (Model Context Protocol) server that provides Garmin Connect running data.
+MCP (Model Context Protocol) server that provides Garmin Connect running data,
+plus all-sport sessions (badminton, table tennis, etc.) for load and recovery.
 Use this server for running training analysis, planning, and workout creation.
 
 All API responses are automatically filtered to remove personally identifiable information (PII) such as owner names, profile IDs, and GPS coordinates via the `sanitize.strip_pii()` module.
@@ -17,8 +18,9 @@ src/garmin_mcp/
   sanitize.py          # PII filtering (strips owner info, GPS coordinates)
   tools/
     __init__.py        # Tool module registration
-    activities.py      # Activity query/detail/weather/climbs (6 tools)
-    summary.py         # Weekly/monthly summary (2 tools)
+    activities.py      # Running activity query/detail/weather/climbs (6 tools)
+    sessions.py        # All-sport sessions + weekly load by sport (3 tools)
+    summary.py         # Weekly/monthly running summary (2 tools)
     training.py        # Training metrics (5 tools)
     heart_rate.py      # Heart rate/HRV (3 tools)
     wellness.py        # Sleep/stress/body battery (3 tools)
@@ -51,7 +53,9 @@ MCP clients (e.g. Claude Desktop) must restart the server process to pick up new
 
 ## MCP tools reference
 
-24 tools total. All date parameters use `YYYY-MM-DD` format, defaulting to today.
+27 tools total. All date parameters use `YYYY-MM-DD` format, defaulting to today.
+
+For “should I run today” after racket sports or other sessions, call `get_recent_sessions` / `get_weekly_session_summary` plus `get_training_readiness`. Do **not** use running-only activity lists for load decisions.
 
 ---
 
@@ -348,6 +352,32 @@ Show the climb segments for my trail run (activity 20511877245)
 > **Difficulty ratings:** DESCENT, LOW, MODERATE, STEEP, STEEPER, STEEPEST, or cycling-style categories (FOURTH_CATEGORY, THIRD_CATEGORY, SECOND_CATEGORY, FIRST_CATEGORY, HC).
 > **Grade Adjusted Pace (GAP):** `grade_adjusted_pace` shows what the effort equates to on flat terrain. Compare with `actual_pace` to see elevation impact. Example: 8:13 actual on 6.9% grade = 6:32 GAP.
 > **Split types:** `CLIMB_PRO_CYCLING_CLIMB` = full climb segment, `CLIMB_PRO_CYCLING_CLIMB_SECTION` = sub-section within a climb.
+
+---
+
+### Sessions (3 tools)
+
+All-sport activity lists. Use these when badminton, table tennis, or other sports affect recovery. Running-only tools (`get_recent_activities`, `get_weekly_running_summary`) still filter non-running sessions.
+
+#### `get_recent_sessions`
+
+Recent Garmin activities of any sport. Includes calories, HR zones, training load, TE. `avg_pace` is set only for running.
+
+**Parameters:** `count: int = 20` (max 100), `sport_type: str = ""` (`badminton`, `table_tennis`, `running`, `treadmill_running`, parent types like `other`, or empty for all)
+
+**Example request:** last 5 sessions including racket sports
+
+#### `get_sessions_by_date`
+
+Same fields, date range.
+
+**Parameters:** `start_date`, `end_date`, `sport_type: str = ""`
+
+#### `get_weekly_session_summary`
+
+Weekly totals (sessions, duration, calories, training load) plus `by_sport` breakdown. No average pace (mixed sports).
+
+**Parameters:** `end_date: str = ""`, `weeks: int = 1` (max 12)
 
 ---
 
@@ -1002,6 +1032,7 @@ This server provides data to support the following training methodologies:
 | **80/20 Training** | `get_activity_hr_zones`, `get_weekly_running_summary` |
 | **Hanson's Method** | `get_weekly_running_summary`, `get_monthly_running_summary`, `get_activity_splits` |
 | **Pfitzinger** | `get_weekly_running_summary`, `get_monthly_running_summary`, `get_recent_activities` |
+| **Multi-sport load** | `get_recent_sessions`, `get_weekly_session_summary`, `get_training_readiness` |
 | **Trail/Ultra analysis** | `get_activity_typed_splits`, `get_activity_weather`, `get_recent_activities`, `get_running_gear` |
 
 ### Methodology usage patterns

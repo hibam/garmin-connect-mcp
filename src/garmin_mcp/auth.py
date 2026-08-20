@@ -16,7 +16,13 @@ def get_token_dir() -> str:
 def _has_saved_tokens() -> bool:
     """Check if token files exist on disk."""
     token_dir = Path(get_token_dir())
-    return (token_dir / "oauth1_token.json").exists() and (token_dir / "oauth2_token.json").exists()
+    # garminconnect 0.3+ stores a single garmin_tokens.json
+    if (token_dir / "garmin_tokens.json").exists():
+        return True
+    # Legacy garth/oauth layout (garminconnect <0.3)
+    return (token_dir / "oauth1_token.json").exists() and (
+        token_dir / "oauth2_token.json"
+    ).exists()
 
 
 def load_token(garmin: Garmin) -> bool:
@@ -50,9 +56,9 @@ def login_with_credentials(garmin: Garmin) -> bool:
         return False
 
     try:
-        garmin.login()
-        # Save tokens for next time
-        garmin.garth.dump(get_token_dir())
+        garmin.login(tokenstore=get_token_dir())
+        # Persist tokens for next time (garminconnect 0.3+)
+        garmin.client.dump(get_token_dir())
         return True
     except Exception:
         return False

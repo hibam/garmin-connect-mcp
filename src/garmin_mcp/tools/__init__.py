@@ -7,6 +7,7 @@ def register_tools(mcp: FastMCP):
     """Register all tool modules with the MCP server."""
     from garmin_mcp.tools import (
         activities,
+        sessions,
         summary,
         training,
         heart_rate,
@@ -17,6 +18,7 @@ def register_tools(mcp: FastMCP):
     )
 
     activities.register(mcp)
+    sessions.register(mcp)
     summary.register(mcp)
     training.register(mcp)
     heart_rate.register(mcp)

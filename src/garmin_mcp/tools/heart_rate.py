@@ -50,9 +50,9 @@ def register(mcp: FastMCP):
 
     @mcp.tool()
     def get_activity_hr_zones(activity_id: int) -> dict[str, Any]:
-        """Get heart rate zone distribution for a specific activity.
-        Shows time spent in each HR zone. Essential for 80/20 training
-        analysis and intensity distribution monitoring.
+        """Get heart rate zone distribution for a specific activity
+        (any sport). Shows time spent in each HR zone. Essential for
+        80/20 training analysis and intensity distribution monitoring.
 
         Args:
             activity_id: The Garmin activity ID

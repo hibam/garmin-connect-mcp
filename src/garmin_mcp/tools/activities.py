@@ -174,8 +174,8 @@ def register(mcp: FastMCP):
 
     @mcp.tool()
     def get_activity_detail(activity_id: int) -> dict[str, Any]:
-        """Get full details of a specific running activity including
-        pace, heart rate, cadence, elevation, training effect, and more.
+        """Get full details of a Garmin activity by ID (any sport).
+        Running fields (pace, cadence, GAP) are null when not applicable.
 
         Args:
             activity_id: The Garmin activity ID

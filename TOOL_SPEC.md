@@ -1,6 +1,6 @@
 # Garmin Running MCP - Tool Specification
 
-Full request/response specification for all 24 MCP tools.
+Full request/response specification for all 27 MCP tools.
 
 All date parameters use `YYYY-MM-DD` format and default to today when empty.
 All pace values are in `min:sec/km` format (e.g. `"5:38"`).
@@ -11,6 +11,7 @@ All distance values are in kilometers unless otherwise noted.
 ## Table of Contents
 
 - [Activities](#activities-6-tools)
+- [Sessions](#sessions-3-tools)
 - [Summary](#summary-2-tools)
 - [Training](#training-5-tools)
 - [Heart Rate](#heart-rate-3-tools)
@@ -256,6 +257,38 @@ All distance values are in kilometers unless otherwise noted.
 | `max_heart_rate` | int\|null | Max heart rate |
 | `avg_power` | int\|null | Average power (W) |
 | `avg_cadence` | float\|null | Average cadence (spm) |
+
+---
+
+## Sessions (3 tools)
+
+Sport-agnostic activity lists. Running-only tools still exclude racket sports.
+
+### `get_recent_sessions`
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `count` | int | 20 | Number of sessions (max 100) |
+| `sport_type` | str | `""` | `badminton`, `table_tennis`, `running`, parent type, or empty = all |
+
+**Response:** `list[dict]` — `activity_id`, `name`, `date`, `type`, `parent_type`, `distance_km`, `duration_seconds`, `elapsed_duration_seconds`, `moving_duration_seconds`, `avg_pace` (running only), `calories`, `bmr_calories`, `avg_heart_rate`, `max_heart_rate`, `hr_zone_*_seconds`, `training_effect_aerobic`, `training_effect_anaerobic`, `training_load`, `training_effect_label`, `moderate_intensity_minutes`, `vigorous_intensity_minutes`, `steps`.
+
+### `get_sessions_by_date`
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `start_date` | str | required | `YYYY-MM-DD` |
+| `end_date` | str | required | `YYYY-MM-DD` |
+| `sport_type` | str | `""` | Same as `get_recent_sessions` |
+
+### `get_weekly_session_summary`
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `end_date` | str | today | Week-ending date |
+| `weeks` | int | 1 | Max 12 |
+
+**Response:** `list[dict]` with `week_start`, `week_end`, `total_sessions`, `total_duration_seconds`, `total_calories`, `total_training_load`, `by_sport[]` (`type`, `count`, `duration_seconds`, `calories`, `training_load`, `avg_heart_rate`).
 
 ---
 

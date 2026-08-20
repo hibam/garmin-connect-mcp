@@ -173,8 +173,12 @@ class GarminClient:
     # --- Gear ---
 
     def get_profile_id(self) -> int:
-        """Get the user's profile ID from garth profile data."""
-        return self._garmin.garth.profile["profileId"]
+        """Get the user's profile ID from Garmin social profile."""
+        # garminconnect 0.3+ no longer exposes `.garth`; fetch social profile directly
+        if hasattr(self._garmin, "garth"):
+            return self._garmin.garth.profile["profileId"]
+        prof = self._garmin.client.connectapi("/userprofile-service/socialProfile")
+        return prof["profileId"]
 
     def get_gear(self, user_profile_number: int) -> list[dict[str, Any]]:
         return self._call("get_gear", user_profile_number)

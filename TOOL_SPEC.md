@@ -262,14 +262,14 @@ All distance values are in kilometers unless otherwise noted.
 
 ## Sessions (3 tools)
 
-Sport-agnostic activity lists. Running-only tools still exclude racket sports.
+Sport-agnostic activity lists. Running-only tools still exclude all non-running activities.
 
 ### `get_recent_sessions`
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `count` | int | 20 | Number of sessions (max 100) |
-| `sport_type` | str | `""` | `badminton`, `table_tennis`, `running`, parent type, or empty = all |
+| `sport_type` | str | `""` | typeKey (e.g. `strength_training`, `indoor_cycling`) or parent type (`running`, `cycling`, `swimming`, `hiking`, `fitness_equipment`, `other`); empty = all |
 
 **Response:** `list[dict]` — `activity_id`, `name`, `date`, `type`, `parent_type`, `distance_km`, `duration_seconds`, `elapsed_duration_seconds`, `moving_duration_seconds`, `avg_pace` (running only), `calories`, `bmr_calories`, `avg_heart_rate`, `max_heart_rate`, `hr_zone_*_seconds`, `training_effect_aerobic`, `training_effect_anaerobic`, `training_load`, `training_effect_label`, `moderate_intensity_minutes`, `vigorous_intensity_minutes`, `steps`.
 

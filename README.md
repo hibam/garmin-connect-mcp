@@ -7,7 +7,7 @@ Claude Desktop 등 MCP 클라이언트와 연동하여 러닝 훈련 분석, 계
 ## 주요 기능
 
 - **러닝 활동 조회** - 최근 활동, 날짜별 조회, 상세 분석, 스플릿 데이터 (47개 필드: 페이스, 심박, 케이던스, 러닝 다이나믹스, 파워, HR존, GAP, 경사도, 스태미나, 온도 등)
-- **전체 종목 세션** - 탁구·배드민턴 등 러닝 외 활동의 칼로리·심박존·훈련 부하, 주간 종목별 합산
+- **전체 종목 세션** - 사이클·헬스·구기 등 러닝 외 모든 활동의 칼로리·심박존·훈련 부하, 주간 종목별 합산
 - **트레일러닝 분석** - ClimbPro 경사 구간 분석, 등급별 난이도, Grade Adjusted Pace, Run/Walk Detection, 날씨 조건
 - **주간/월간 요약** - 볼륨 트렌드, 전월 대비 비교
 - **훈련 지표** - VO2max, 훈련 상태, 훈련 준비도, 레이스 예측, 젖산역치
@@ -96,7 +96,7 @@ uv run python scripts/auth.py
 
 | 도구 | 설명 | 주요 파라미터 |
 |------|------|--------------|
-| `get_recent_sessions` | 최근 활동 (러닝·탁구·배드민턴 등 전부) | `count`, `sport_type` (선택) |
+| `get_recent_sessions` | 최근 활동 (모든 Garmin 종목) | `count`, `sport_type` (선택) |
 | `get_sessions_by_date` | 날짜 범위 전체 종목 조회 | `start_date`, `end_date`, `sport_type` |
 | `get_weekly_session_summary` | 주간 세션·칼로리·부하, 종목별 합 | `end_date`, `weeks` |
 

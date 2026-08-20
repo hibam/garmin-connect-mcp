@@ -1,4 +1,4 @@
-"""All-sport session tools (running, racket sports, etc.)."""
+"""All-sport session tools (any Garmin activity type)."""
 
 from collections import defaultdict
 from datetime import date, timedelta
@@ -170,15 +170,16 @@ def _week_summary(activities: list[dict[str, Any]]) -> dict[str, Any]:
 def register(mcp: FastMCP):
     @mcp.tool()
     def get_recent_sessions(count: int = 20, sport_type: str = "") -> list[dict[str, Any]]:
-        """Get recent Garmin activities of any sport (running, badminton,
-        table tennis, etc.). Use this for recovery / load decisions when
-        non-running sessions matter. For running-only pace analysis use
-        get_recent_activities instead.
+        """Get recent Garmin activities of any sport (cycling, swimming,
+        strength training, team sports, etc.). Use for recovery / load
+        decisions when non-running sessions matter. For running-only pace
+        analysis use get_recent_activities instead.
 
         Args:
             count: Number of sessions to return (default: 20, max: 100)
-            sport_type: Optional filter. typeKey (badminton, table_tennis,
-                treadmill_running) or parent type (running, other). Empty = all.
+            sport_type: Optional filter. typeKey (e.g. strength_training,
+                indoor_cycling, yoga) or parent type (running, cycling,
+                swimming, hiking, fitness_equipment, other). Empty = all.
         """
         from garmin_mcp import get_client
 
@@ -227,7 +228,7 @@ def register(mcp: FastMCP):
     ) -> list[dict[str, Any]]:
         """Weekly all-sport summary: session count, duration, calories,
         training load, split by sport. Use instead of weekly running summary
-        when racket sports or other activities affect recovery.
+        when any non-running activity affects recovery or total load.
 
         Args:
             end_date: End date (YYYY-MM-DD), defaults to today

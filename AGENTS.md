@@ -1,7 +1,7 @@
 # Garmin Running MCP Server
 
 MCP (Model Context Protocol) server that provides Garmin Connect running data,
-plus all-sport sessions (badminton, table tennis, etc.) for load and recovery.
+plus all-sport sessions (cycling, gym, team sports, etc.) for load and recovery.
 Use this server for running training analysis, planning, and workout creation.
 
 All API responses are automatically filtered to remove personally identifiable information (PII) such as owner names, profile IDs, and GPS coordinates via the `sanitize.strip_pii()` module.
@@ -55,7 +55,7 @@ MCP clients (e.g. Claude Desktop) must restart the server process to pick up new
 
 27 tools total. All date parameters use `YYYY-MM-DD` format, defaulting to today.
 
-For “should I run today” after racket sports or other sessions, call `get_recent_sessions` / `get_weekly_session_summary` plus `get_training_readiness`. Do **not** use running-only activity lists for load decisions.
+For “should I run today” after any other workout, call `get_recent_sessions` / `get_weekly_session_summary` plus `get_training_readiness`. Do **not** use running-only activity lists for load decisions.
 
 ---
 
@@ -357,15 +357,15 @@ Show the climb segments for my trail run (activity 20511877245)
 
 ### Sessions (3 tools)
 
-All-sport activity lists. Use these when badminton, table tennis, or other sports affect recovery. Running-only tools (`get_recent_activities`, `get_weekly_running_summary`) still filter non-running sessions.
+All-sport activity lists. Use these whenever non-running workouts affect recovery or weekly load. Running-only tools (`get_recent_activities`, `get_weekly_running_summary`) still filter non-running sessions.
 
 #### `get_recent_sessions`
 
 Recent Garmin activities of any sport. Includes calories, HR zones, training load, TE. `avg_pace` is set only for running.
 
-**Parameters:** `count: int = 20` (max 100), `sport_type: str = ""` (`badminton`, `table_tennis`, `running`, `treadmill_running`, parent types like `other`, or empty for all)
+**Parameters:** `count: int = 20` (max 100), `sport_type: str = ""` (typeKey such as `strength_training`, `indoor_cycling`, `yoga`; parent types `running`, `cycling`, `swimming`, `hiking`, `fitness_equipment`, `other`; or empty for all)
 
-**Example request:** last 5 sessions including racket sports
+**Example request:** last 5 sessions across all sports
 
 #### `get_sessions_by_date`
 
